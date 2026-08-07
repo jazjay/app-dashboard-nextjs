@@ -1,4 +1,6 @@
 'use server'
+import { signIn } from '@/auth'
+import { AuthError } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import postgres from 'postgres'
@@ -122,4 +124,27 @@ export async function deleteInvoice(id: string) {
 
   await sql`DELETE FROM invoices WHERE id = ${id}`
   revalidatePath('/dashboard/invoices')
+}
+/**
+ * If there's a 'CredentialsSignin' error, you want to show an appropriate error message.
+ * You can learn about NextAuth.js errors in the documentation (https://errors.authjs.dev/)
+ * @returns
+ */
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData
+): Promise<'Invalid credentials.' | 'Something went wrong.' | undefined> {
+  try {
+    await signIn('credentials', formData)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.'
+        default:
+          return 'Something went wrong.'
+      }
+    }
+    throw error
+  }
 }
