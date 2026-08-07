@@ -4,7 +4,7 @@ import Form from '@/app/ui/invoices/create-form'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Create Invoice'
+  title: 'Create'
 }
 
 export default async function Page() {
@@ -16,7 +16,7 @@ export default async function Page() {
         breadcrumbs={[
           { label: 'Invoices', href: '/dashboard/invoices' },
           {
-            label: 'Create Invoice',
+            label: 'Create',
             href: '/dashboard/invoices/create',
             active: true
           }
